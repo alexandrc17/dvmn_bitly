@@ -2,6 +2,7 @@ import requests
 import json
 import os
 from dotenv import load_dotenv
+import argparse
 
 
 def user_link(token):
@@ -12,7 +13,7 @@ def user_link(token):
   response = requests.get(url1, headers=headers)
   response.raise_for_status()
   pretty_profile = json.dumps(response.json(), indent=2)
-  print(pretty_profile)
+  return pretty_profile
 
 
 def shorten_link(token, url):
@@ -46,8 +47,11 @@ def count_clicks(token, url):
 def main():
   load_dotenv()
   token = os.getenv("TOKEN_BITLY")
-  url = input("Введите ссылку: ")
-  user_link(token)
+  parser = argparse.ArgumentParser(description="url in bitly or counter bitly")
+  parser.add_argument('url', type=str, help='Input URL')
+  args = parser.parse_args()
+  url = args.url
+
   if url.startswith("http://bit.ly"):
     try:
       clicks_count = count_clicks(token, url)

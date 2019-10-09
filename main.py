@@ -5,41 +5,30 @@ from dotenv import load_dotenv
 import argparse
 
 
-def user_link(token):
-  url1 = "https://api-ssl.bitly.com/v4/user"
-  headers = { 
-    "Authorization" : "Bearer "+token,
-  }
-  response = requests.get(url1, headers=headers)
-  response.raise_for_status()
-  pretty_profile = json.dumps(response.json(), indent=2)
-  return pretty_profile
-
-
 def shorten_link(token, url):
-  url2 = "https://api-ssl.bitly.com/v4/bitlinks"
+  url_request = "https://api-ssl.bitly.com/v4/bitlinks"
   headers = { 
     "Authorization" : "Bearer "+token,
   }
   payload = {
     "long_url" : url
   }
-  response = requests.post(url2, headers=headers, json=payload)
+  response = requests.post(url_request, headers=headers, json=payload)
   response.raise_for_status()
   bitlink = response.json()['link']
   return bitlink
 
 
 def count_clicks(token, url):
-  blink = url[url.rfind("//")+1:]
-  url3 = "https://api-ssl.bitly.com/v4/bitlinks/{}/clicks/summary".format(blink)
+  bitlink = url[url.rfind("//")+1:]
+  url_request = "https://api-ssl.bitly.com/v4/bitlinks/{}/clicks/summary".format(bitlink)
   headers = { 
     "Authorization" : "Bearer "+token,
   }
   payload = {
     "units" : "-1",
   }
-  response = requests.get(url3, headers=headers, params=payload)
+  response = requests.get(url_request, headers=headers, params=payload)
   response.raise_for_status()
   clicks_count = response.json()['total_clicks'] 
   return clicks_count
